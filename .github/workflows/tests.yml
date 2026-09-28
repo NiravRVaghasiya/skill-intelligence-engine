@@ -1,0 +1,15 @@
+# Tests need no model libraries: chromadb / sentence-transformers are deliberately NOT
+# installed here, so any test that reaches for them (or the network) fails. See CLAUDE.md G3/G4.
+name: tests
+on: [push, pull_request]
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install rank-bm25 networkx fastapi httpx pydantic python-frontmatter numpy pytest
+      - run: python -m sie.ingest --skills data/skills --expect 38
+      - run: pytest -q
