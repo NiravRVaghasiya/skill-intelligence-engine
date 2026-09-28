@@ -1,0 +1,136 @@
+{
+  "query": "Build a fraud detection model and evaluate it under severe class imbalance",
+  "historical": {
+    "commit": "c54f548",
+    "n_skills": 35,
+    "keyword": {
+      "intent": "workflow",
+      "route": [
+        {
+          "slug": "computer-vision",
+          "score": 7.0,
+          "reasons": "name overlap: detection; description overlap: build, detection, model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "model-evaluation",
+          "score": 6.0,
+          "reasons": "name overlap: model; description overlap: build, model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "explainability",
+          "score": 5.0,
+          "reasons": "name overlap: model; description overlap: model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "model-deployment",
+          "score": 5.0,
+          "reasons": "name overlap: model; description overlap: model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "model-optimization",
+          "score": 5.0,
+          "reasons": "name overlap: model; description overlap: model; type matches classified intent (workflow)"
+        }
+      ]
+    },
+    "sie": {
+      "ranking": "rrf (no reranker weights)",
+      "route": [
+        {
+          "slug": "model-evaluation",
+          "score": 0.0325,
+          "section": "Workflow"
+        },
+        {
+          "slug": "supervised-learning",
+          "score": 0.032,
+          "section": "Gotchas"
+        },
+        {
+          "slug": "nlp-tasks",
+          "score": 0.0306,
+          "section": "Gotchas"
+        },
+        {
+          "slug": "computer-vision",
+          "score": 0.0164,
+          "section": "Workflow"
+        },
+        {
+          "slug": "ai-ethics-fairness",
+          "score": 0.0159,
+          "section": "Gotchas"
+        }
+      ]
+    }
+  },
+  "head": {
+    "commit": "vendored",
+    "n_skills": 38,
+    "keyword": {
+      "intent": "workflow",
+      "route": [
+        {
+          "slug": "supervised-learning",
+          "score": 18.0,
+          "reasons": "capability match: baseline-model-comparison, classifier-model-selection, regression-model-selection, cross-validated-model-comparison, class-imbalance-handling; description overlap: model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "model-deployment",
+          "score": 14.0,
+          "reasons": "capability match: model-serialization, container-image-build, high-throughput-model-serving; name overlap: model; description overlap: model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "ml-monitoring",
+          "score": 12.0,
+          "reasons": "capability match: data-drift-detection, concept-drift-detection, prediction-drift-detection; description overlap: model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "computer-vision",
+          "score": 10.0,
+          "reasons": "capability match: segmentation-model-finetuning; name overlap: detection; description overlap: build, detection, model; type matches classified intent (workflow)"
+        },
+        {
+          "slug": "agents-and-tools",
+          "score": 0.0,
+          "reasons": "pulled in as a hard prerequisite"
+        },
+        {
+          "slug": "agent-evaluation",
+          "score": 9.0,
+          "reasons": "capability match: loop-detection, unsafe-action-detection; description overlap: evaluate; type matches classified intent (workflow)"
+        }
+      ]
+    },
+    "sie": {
+      "ranking": "rrf (no reranker weights)",
+      "route": [
+        {
+          "slug": "model-evaluation",
+          "score": 0.0323,
+          "section": "Workflow"
+        },
+        {
+          "slug": "supervised-learning",
+          "score": 0.0323,
+          "section": "Gotchas"
+        },
+        {
+          "slug": "ml-monitoring",
+          "score": 0.0304,
+          "section": "Gotchas"
+        },
+        {
+          "slug": "ml-problem-framing",
+          "score": 0.0301,
+          "section": "Gotchas"
+        },
+        {
+          "slug": "nlp-tasks",
+          "score": 0.0301,
+          "section": "Gotchas"
+        }
+      ]
+    }
+  }
+}
