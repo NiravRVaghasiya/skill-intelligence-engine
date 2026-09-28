@@ -37,3 +37,4 @@ class Hit:
     score: float
     section: str = ""
     snippet: str = ""
+    chunk_id: str = ""              # source chunk; lets the reranker score the full text

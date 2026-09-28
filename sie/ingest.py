@@ -181,6 +181,8 @@ def main() -> None:
     ap.add_argument("--expect", type=int, default=None,
                     help="exit 1 unless exactly this many skills load with zero load failures")
     args = ap.parse_args()
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="replace")   # never crash on a cp1252 console
     report = load_corpus_report(args.skills)
     print(format_report(report))
     if args.expect is not None and (len(report.skills) != args.expect or report.skipped):
