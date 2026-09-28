@@ -17,6 +17,8 @@ class Skill:
     risk_level: str = "low"
     evidence_level: str = "established-practice"
     body: str = ""                  # full markdown body (sections concatenated)
+    display_name: str = ""          # human title, e.g. "RAG Pipeline"
+    description: str = ""           # frontmatter "Use when ..." routing text
 
 
 @dataclass
