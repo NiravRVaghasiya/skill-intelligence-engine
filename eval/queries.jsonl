@@ -1,0 +1,12 @@
+{"query": "handle missing values and encode categorical features before training", "gold": "data-preprocessing"}
+{"query": "which columns matter most and how to avoid target leakage", "gold": "feature-engineering"}
+{"query": "pick between regression and classification models for tabular data", "gold": "supervised-learning"}
+{"query": "cluster customers and reduce dimensionality for visualization", "gold": "unsupervised-learning"}
+{"query": "choose the right metric and cross-validation scheme, calibrate probabilities", "gold": "model-evaluation"}
+{"query": "tune hyperparameters efficiently with bayesian optimization", "gold": "hyperparameter-tuning"}
+{"query": "chunk documents, embed them and retrieve with reranking", "gold": "rag-pipeline"}
+{"query": "adapt an LLM to my domain with lora on a small gpu", "gold": "fine-tuning-llms"}
+{"query": "measure retrieval recall and citation faithfulness of my rag app", "gold": "rag-evaluation"}
+{"query": "detect when a deployed model's inputs drift over time", "gold": "ml-monitoring"}
+{"query": "forecast weekly sales accounting for seasonality", "gold": "time-series"}
+{"query": "explain individual predictions with shap values", "gold": "explainability"}
