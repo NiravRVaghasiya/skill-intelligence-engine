@@ -1,0 +1,4 @@
+# Pin LF everywhere so the vendored-file and query-set sha256s hold on every checkout
+# (a Windows clone with core.autocrlf=true would otherwise rewrite them).
+* text=auto eol=lf
+*.png binary

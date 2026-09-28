@@ -30,11 +30,17 @@ def _order(g, nodes: set[str]) -> list[str]:
         raise ValueError(f"requires cycle: {cycle}") from None
 
 
-def _conflicts_of(g, slug: str) -> set[str]:
-    """Skills that conflict with `slug`, declared in either direction."""
+def conflicts_of(g, slug: str) -> set[str]:
+    """Skills that conflict with `slug`, declared in either direction (in-corpus only)."""
     declared = set(g.nodes[slug].get("conflicts", []))
     declared |= {n for n in g if slug in g.nodes[n].get("conflicts", [])}
-    return {c for c in declared if c in g}
+    return {c for c in declared if c in g and c != slug}
+
+
+def see_also(g, slug: str, exclude: set[str] = frozenset()) -> list[str]:
+    """Declared `related` skills in declared order: in-corpus, deduplicated, minus `exclude`."""
+    return list(dict.fromkeys(r for r in g.nodes[slug].get("related", [])
+                              if r in g and r not in exclude and r != slug))
 
 
 def learning_path(g, target: str) -> dict:
@@ -42,23 +48,26 @@ def learning_path(g, target: str) -> dict:
 
     Returns:
         {"target", "path" (prereqs in topological order, ending at target), "related"
-        (target's see-also, minus anything already on the path), "conflicts" (skills that
-        conflict with any skill on the path), "path_conflicts" (conflicting pairs *within*
-        the path)}.
+        (target's see-also, minus path members and conflicting skills), "conflicts" (skills
+        that conflict with any skill on the path), "path_conflicts" (conflicting pairs
+        *within* the path), "missing_prerequisites" (declared `requires` of path members
+        that are not in the corpus, e.g. typos: [skill, missing_slug])}.
 
     Raises:
         KeyError: unknown target. ValueError: a requires cycle blocks ordering.
     """
     nodes = prerequisite_closure(g, target) | {target}
     ordered = _order(g, nodes)
-    related = [r for r in g.nodes[target].get("related", []) if r in g and r not in nodes]
     conflicts: set[str] = set()
     path_conflicts: set[tuple[str, str]] = set()
     for n in ordered:
-        for c in _conflicts_of(g, n):
+        for c in conflicts_of(g, n):
             if c in nodes:
                 path_conflicts.add(tuple(sorted((n, c))))
             else:
                 conflicts.add(c)
-    return {"target": target, "path": ordered, "related": related,
-            "conflicts": sorted(conflicts), "path_conflicts": [list(p) for p in sorted(path_conflicts)]}
+    missing = sorted([s, ref] for s, kind, ref in g.graph.get("dangling", [])
+                     if kind == "requires" and s in nodes)
+    return {"target": target, "path": ordered, "related": see_also(g, target, nodes | conflicts),
+            "conflicts": sorted(conflicts), "path_conflicts": [list(p) for p in sorted(path_conflicts)],
+            "missing_prerequisites": missing}

@@ -12,3 +12,4 @@ httpx>=0.27                # fastapi.testclient (tests/test_api.py)
 matplotlib>=3.8            # benchmarks/results.png (eval/report.py, imported lazily)
 # optional (LLM-as-judge / path narration) — core works without these
 # openai>=1.40
+# streamlit>=1.30            # demo/app_streamlit.py (`make demo`)

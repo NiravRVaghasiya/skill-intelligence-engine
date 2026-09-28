@@ -208,3 +208,14 @@ def test_retrieve_is_prefix_consistent_across_k():
     q = "explain individual predictions with shap values"
     top10 = [h.skill_slug for h in r.retrieve(q, k=10)]
     assert [h.skill_slug for h in r.retrieve(q, k=3)] == top10[:3]
+
+
+def test_last_reranked_reports_what_actually_ordered_the_result():
+    r = _router(DENSE, reranker=FakeReranker({}))
+    r.retrieve("shap values", k=2)
+    assert r.last_reranked is True
+    r.retrieve("   ", k=2)                     # early return: nothing was reranked
+    assert r.last_reranked is False
+    broken = _router(DENSE, reranker=BrokenReranker())
+    broken.retrieve("shap values", k=2)
+    assert broken.last_reranked is False

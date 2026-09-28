@@ -16,6 +16,7 @@ from ..models import Chunk, Hit
 _DEFAULT_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 _COLLECTION = "skills"
 _STAGING = "skills__staging"
+_BACKUP = "skills__backup"
 EMBEDDERS = ("onnx", "sentence-transformers")
 # ef_search >= corpus size makes HNSW effectively exact (and so reproducible) at this scale.
 _HNSW = {"space": "cosine", "ef_construction": 200, "ef_search": 400}
@@ -81,11 +82,11 @@ class DenseIndex:
         return self._coll
 
     def build(self, chunks: list[Chunk], fingerprint: str = "") -> None:
-        """Rebuild from scratch (removed chunks never linger), swapping in atomically.
+        """Rebuild from scratch (removed chunks never linger) without losing the old index.
 
         Embeddings are computed and written to a staging collection first; the live
-        collection is replaced only once that succeeded, so a failed build leaves the
-        previous index intact.
+        collection is swapped out (renamed to a backup, restored on failure) only once that
+        succeeded, so a failed build leaves the previous index intact.
         """
         ids = [c.chunk_id for c in chunks]
         if not chunks or len(set(ids)) != len(ids):
@@ -98,10 +99,27 @@ class DenseIndex:
             metadata={"embedder": self.embedder, "fingerprint": fingerprint or "-"})
         staging.add(ids=ids, embeddings=embeddings, documents=[c.text for c in chunks],
                     metadatas=[{"slug": c.skill_slug, "section": c.section} for c in chunks])
-        self._drop(_COLLECTION)
-        staging.modify(name=_COLLECTION)
+        self._swap_in(staging)
         self._coll = staging
         self.generation += 1
+
+    def _swap_in(self, staging) -> None:
+        """live -> backup, staging -> live, drop backup; restore the backup if the rename fails.
+
+        Concurrent readers may briefly find no live collection; search() rebinds once.
+        """
+        self._coll = None
+        live = self._collection()
+        self._drop(_BACKUP)
+        if live is not None:
+            live.modify(name=_BACKUP)
+        try:
+            staging.modify(name=_COLLECTION)
+        except Exception:
+            if live is not None:
+                live.modify(name=_COLLECTION)
+            raise
+        self._drop(_BACKUP)
 
     def _drop(self, name: str) -> None:
         from chromadb.errors import NotFoundError

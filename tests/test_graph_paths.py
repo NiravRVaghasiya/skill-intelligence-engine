@@ -138,3 +138,21 @@ def test_format_learning_path_flags_conflicts_on_path(tmp_path):
             f"---\ntype: workflow\ndomain: d\nlevel: intermediate\n{fm}\n---\n## Overview\nhi\n", encoding="utf-8")
     text = format_learning_path(str(tmp_path), "b")
     assert "conflicts: x" in text and "WARNING conflicting skills on the path: a <-> b" in text
+
+
+def test_missing_prerequisite_is_reported_not_silently_dropped(tmp_path):
+    from sie.router import format_learning_path
+    g = build_graph([_s("a"), _s("t", requires=["a", "rag-pipline"])])
+    assert learning_path(g, "t")["missing_prerequisites"] == [["t", "rag-pipline"]]
+    for slug, fm in {"a": "", "t": "requires:\n  - a\n  - rag-pipline"}.items():
+        (tmp_path / slug).mkdir()
+        (tmp_path / slug / "SKILL.md").write_text(
+            f"---\ntype: workflow\ndomain: d\nlevel: intermediate\n{fm}\n---\n## Overview\nhi\n", encoding="utf-8")
+    assert "WARNING prerequisites not in the corpus (typo?): t requires 'rag-pipline'" in \
+        format_learning_path(str(tmp_path), "t")
+
+
+def test_see_also_is_deduplicated_and_never_lists_a_conflict():
+    g = build_graph([_s("a"), _s("x", conflicts=["t"]), _s("y"), _s("t", requires=["a"], related=["x", "y", "y", "a"])])
+    lp = learning_path(g, "t")
+    assert lp["related"] == ["y"] and lp["conflicts"] == ["x"]

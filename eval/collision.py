@@ -61,6 +61,14 @@ def sie_run(skills_dir: Path, persist_dir: Path, build: bool) -> dict:
             "route": [{"slug": h.skill_slug, "score": round(h.score, 4), "section": h.section} for h in hits]}
 
 
+def _release_chroma() -> None:
+    """Drop chromadb's cached per-path clients so their sqlite/HNSW files close."""
+    import gc
+    from chromadb.api.client import SharedSystemClient
+    SharedSystemClient.clear_system_cache()
+    gc.collect()
+
+
 def _scored_top1(route: list[dict]) -> str:
     """Top keyword hit by score (route() may prepend 0-score prerequisites)."""
     return max(route, key=lambda h: h["score"])["slug"]
@@ -131,6 +139,7 @@ def main() -> None:
                               "n_skills": len(KeywordBaseline(hist, scripts_dir=hist / "scripts").skills),
                               "keyword": keyword_run(hist, hist / "scripts"),
                               "sie": sie_run(hist, tmp / "chroma", build=True)}
+        _release_chroma()      # else Windows keeps the temp index's files open and it leaks
     runs["head"] = {"commit": "vendored", "n_skills": len(KeywordBaseline().skills),
                     "keyword": keyword_run(Path("data/skills"), Path("eval/baseline")),
                     "sie": sie_run(Path("data/skills"), Path("data/chroma"), build=False)}

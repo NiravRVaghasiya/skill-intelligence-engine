@@ -45,7 +45,8 @@ def main() -> None:
     ap.add_argument("--out", default=str(OUT))
     args = ap.parse_args()
     rows = extract(Path(args.source))
-    Path(args.out).write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+    Path(args.out).write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8",
+                              newline="\n")        # LF on Windows too: the file's sha256 is recorded
     print(f"[source-queries] wrote {len(rows)} cases -> {args.out}")
 
 

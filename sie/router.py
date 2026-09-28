@@ -82,6 +82,7 @@ class HybridRouter:
         self.reranker = Reranker() if use_reranker else None
         self.strict_rerank = strict_rerank
         self.rerank_error: str | None = None
+        self.last_reranked = False           # did the cross-encoder order the last result?
         self._chunks: list[Chunk] | None = None
         self._texts: dict[str, str] = {}
         self._dense_gen: int | None = None   # dense.generation last verified fresh
@@ -156,8 +157,9 @@ class HybridRouter:
 
         The pool is fixed rather than scaled with k, so retrieve(q, 3) is always a prefix of
         retrieve(q, 10). Fewer than k hits come back when the pool covers fewer skills
-        (~16 at pool=20 on this corpus); raise `pool` for exhaustive listings.
+        (about 10-16 at pool=20 on this corpus); raise `pool` for exhaustive listings.
         """
+        self.last_reranked = False
         if pool < 1:
             raise ValueError("pool must be >= 1")
         if k <= 0 or not query.strip():
@@ -168,6 +170,7 @@ class HybridRouter:
         if self.reranker is not None:
             reranked = self._rerank(query, rankings, fused[:pool])
             if reranked is not None:
+                self.last_reranked = True
                 return dedup_by_skill(reranked, k)
         return dedup_by_skill(fused, k)
 
@@ -198,6 +201,9 @@ def format_learning_path(skills_dir: str, target: str) -> str:
     if lp["path_conflicts"]:
         lines.append("  WARNING conflicting skills on the path: "
                      + "; ".join(" <-> ".join(p) for p in lp["path_conflicts"]))
+    if lp["missing_prerequisites"]:
+        lines.append("  WARNING prerequisites not in the corpus (typo?): "
+                     + "; ".join(f"{s} requires '{ref}'" for s, ref in lp["missing_prerequisites"]))
     return "\n".join(lines)
 
 
