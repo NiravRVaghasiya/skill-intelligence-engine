@@ -15,6 +15,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
+from sie.chunking import card_chunk
+from sie.index.sparse import SparseIndex
+from sie.ingest import load_corpus
+from sie.models import Hit
 from sie.router import HybridRouter, corpus_fingerprint
 from sie.rerank import RerankerUnavailable
 from eval.baseline import KeywordBaseline
@@ -38,10 +42,23 @@ class System:
     make: Callable[[], object]       # -> object with .retrieve(query, k) -> list[Hit]
 
 
+class CardOnlyBM25:
+    """Ablation: BM25 over one Card chunk per skill (display name + description + capability
+    tags), i.e. roughly the frontmatter fields the keyword router scores, and no body text."""
+
+    def __init__(self, skills_dir: str = "data/skills"):
+        self.sparse = SparseIndex()
+        self.sparse.build([card_chunk(s) for s in load_corpus(skills_dir)])
+
+    def retrieve(self, query: str, k: int = 10) -> list[Hit]:
+        return self.sparse.search(query, k=k)       # one chunk per skill: already deduped
+
+
 SYSTEMS = [
     System("keyword", "Keyword router (baseline)", "keyword", lambda: KeywordBaseline()),
     System("keyword-shipped", "Keyword route() as shipped", "keyword",
            lambda: KeywordBaseline(shipped=True)),
+    System("bm25-card", "SIE: BM25, Card chunks only", "sie", lambda: CardOnlyBM25()),
     System("bm25", "SIE: BM25 only", "sie", lambda: HybridRouter(mode="sparse", use_reranker=False)),
     System("dense", "SIE: dense only", "sie", lambda: HybridRouter(mode="dense", use_reranker=False)),
     System("hybrid", "SIE: hybrid RRF (--no-rerank)", "sie", lambda: HybridRouter(use_reranker=False)),
@@ -56,6 +73,7 @@ class Scored:
     system: System
     ranked: list[list[str]] | None   # per query; None when the system could not run
     note: str = ""
+    scores: list[list[float]] | None = None   # parallel to `ranked`
 
 
 def load_queries(path: Path = QUERIES) -> list[dict]:
@@ -66,10 +84,33 @@ def score_system(system: System, queries: list[dict]) -> Scored:
     """Top-DEPTH ranked slugs for every query; a system missing its model is 'pending'."""
     try:
         r = system.make()
-        ranked = [[h.skill_slug for h in r.retrieve(q["query"], k=DEPTH)] for q in queries]
+        hits = [r.retrieve(q["query"], k=DEPTH) for q in queries]
     except RerankerUnavailable as e:
         return Scored(system, None, note=str(e))
-    return Scored(system, ranked)
+    return Scored(system, [[h.skill_slug for h in hs] for hs in hits],
+                  scores=[[h.score for h in hs] for hs in hits])
+
+
+def tie_aware_top1(scored: Scored, queries: list[dict]) -> tuple[int, float]:
+    """(#queries whose top-1 is an exact score tie, expected top-1 under random tie order).
+
+    Every system breaks exact ties deterministically (by slug); this shows how much of
+    its strict top-1 that choice decides. Ties are compared at 9 decimals.
+    """
+    tied, expected = 0, 0.0
+    for ranked, scores, q in zip(scored.ranked, scores_of(scored), queries):
+        if not ranked:
+            continue
+        top = round(scores[0], 9)
+        group = [slug for slug, sc in zip(ranked, scores) if round(sc, 9) == top]
+        golds = {q["gold"]} if isinstance(q["gold"], str) else set(q["gold"])
+        tied += len(group) > 1
+        expected += sum(slug in golds for slug in group) / len(group)
+    return tied, expected / len(queries)
+
+
+def scores_of(scored: Scored) -> list[list[float]]:
+    return scored.scores or [[0.0] * len(r) for r in scored.ranked]
 
 
 def metric_values(scored: Scored, queries: list[dict]) -> dict[str, list[float]]:
@@ -172,12 +213,25 @@ def provenance(results: list[Scored]) -> str:
     return "\n".join(lines)
 
 
+def tie_table(results: list[Scored], queries: list[dict]) -> str:
+    rows = []
+    for s in results:
+        if s.ranked is None:
+            continue
+        tied, expected = tie_aware_top1(s, queries)
+        rows.append([s.system.label, f"{_mean(s, queries, 'top-1'):.3f}", f"{expected:.3f}", str(tied)])
+    return md_table(["System", "top-1 (ties by slug)", "top-1 (expected, random tie order)",
+                     "queries with a tied top-1"], rows)
+
+
 def section(title: str, results: list[Scored], queries: list[dict], headline: str) -> str:
     return "\n\n".join([
         f"### {title} (n={len(queries)})",
         metrics_table(results, queries, headline),
         f"Headline vs baseline, paired over the same queries — {win_loss(results, queries, headline)}:",
         delta_table(results, queries, headline),
+        "Tie sensitivity: every system breaks exact score ties alphabetically by slug.",
+        tie_table(results, queries),
     ])
 
 
@@ -231,6 +285,16 @@ def observations(results: dict[str, list[Scored]], sets: dict[str, list[dict]], 
     for name, title in (("main", "Main"), ("source", "Source-authored")):
         qs = sets[name]
         by = {s.system.key: s for s in results[name] if s.ranked is not None}
+        t1 = {key: _mean(by[key], qs, "top-1") for key in (BASELINE, "bm25-card", "bm25")}
+        lines.append(
+            f"- **{title} set, where the lexical gain comes from:** BM25 over the Card chunks "
+            f"alone (about the fields the keyword router reads) takes top-1 from "
+            f"{t1[BASELINE]:.3f} to {t1['bm25-card']:.3f} (better term weighting on the same "
+            f"text). Indexing the body sections too "
+            f"{'raises' if t1['bm25'] > t1['bm25-card'] else 'lowers'} it to {t1['bm25']:.3f}.")
+    for name, title in (("main", "Main"), ("source", "Source-authored")):
+        qs = sets[name]
+        by = {s.system.key: s for s in results[name] if s.ranked is not None}
         best, other = sorted(("bm25", "dense"), key=lambda key: -_mean(by[key], qs, "mrr"))
         mrr = {key: _mean(by[key], qs, "mrr") for key in (best, other, headline, BASELINE)}
         lines.append(
@@ -273,6 +337,46 @@ def report(results: dict[str, list[Scored]], sets: dict[str, list[dict]]) -> str
     ])
 
 
+def readme_headline(results: dict[str, list[Scored]], sets: dict[str, list[dict]]) -> str:
+    """The README's opening claim, computed (so adding reranker weights updates it too)."""
+    headline = headline_key(results["main"])
+    m = {s.system.key: s for s in results["main"]}
+    src = {s.system.key: s for s in results["source"]}
+    pct = lambda s, qs: f"{100 * _mean(s, qs, 'top-1'):.1f}%"
+    return (f"**Top-1 routing accuracy goes from {pct(m[BASELINE], sets['main'])} to "
+            f"{pct(m[headline], sets['main'])}** on {len(sets['main'])} labeled queries (keyword "
+            f"router -> {m[headline].system.label}), and from {pct(src[BASELINE], sets['source'])} to "
+            f"{pct(src[headline], sets['source'])} on the {len(sets['source'])} queries taken from the "
+            f"source repo's own eval cases. _Generated by `python -m eval.run_eval`._")
+
+
+def readme_block(results: dict[str, list[Scored]], sets: dict[str, list[dict]]) -> str:
+    """Compact headline table + computed takeaways for README.md (same run as RESULTS.md)."""
+    headline = headline_key(results["main"])
+    rows = []
+    for s in results["main"]:
+        if s.system.key == "keyword-shipped":
+            continue
+        name = f"**{s.system.label}**" if s.system.key == headline else s.system.label
+        if s.ranked is None:
+            rows.append([name] + ["pending"] * len(METRICS))
+        else:
+            rows.append([name] + [f"{_mean(s, sets['main'], m):.3f}" for m in METRICS])
+    src = {s.system.key: s for s in results["source"]}
+    return "\n\n".join([
+        f"Main set: {len(sets['main'])} labeled queries across all 8 domains (every skill covered).",
+        md_table(["System"] + METRICS, rows),
+        f"On the {len(sets['source'])} queries taken from the source repo's own `evals/` cases: "
+        f"keyword top-1 **{_mean(src[BASELINE], sets['source'], 'top-1'):.3f}** / MRR "
+        f"{_mean(src[BASELINE], sets['source'], 'mrr'):.3f} vs SIE top-1 "
+        f"**{_mean(src[headline], sets['source'], 'top-1'):.3f}** / MRR "
+        f"{_mean(src[headline], sets['source'], 'mrr'):.3f}. "
+        f"CIs, paired deltas, tie sensitivity, ablations and every miss: "
+        f"[`benchmarks/RESULTS.md`](benchmarks/RESULTS.md). _Generated by `python -m eval.run_eval`._",
+        "**What the ablations say (computed):**\n\n" + observations(results, sets, headline),
+    ])
+
+
 def print_summary(results: dict[str, list[Scored]], sets: dict[str, list[dict]]) -> None:
     for set_name, queries in sets.items():
         print(f"\n[eval] {set_name} set (n={len(queries)})")
@@ -299,6 +403,8 @@ def main() -> None:
     write_per_query(results, sets)
     chart(results, sets, headline_key(results["main"]))
     replace_block(OUT / "RESULTS.md", "metrics", report(results, sets))
+    replace_block(Path("README.md"), "headline", readme_headline(results, sets))
+    replace_block(Path("README.md"), "benchmarks", readme_block(results, sets))
     print(f"\n[eval] wrote {OUT / 'RESULTS.md'}, {OUT / 'results.png'}, {OUT / 'per_query.jsonl'}")
 
 
