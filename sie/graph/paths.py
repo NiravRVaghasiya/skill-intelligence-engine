@@ -1,32 +1,64 @@
 """Learning-path generation: requires-closure + topological ordering."""
 from __future__ import annotations
 
+from .build import requires_graph
+
+_LEVEL_ORDER = {"beginner": 0, "intermediate": 1, "advanced": 2}
+
 
 def prerequisite_closure(g, target: str) -> set[str]:
     """All skills that must be learned before `target` (transitive requires)."""
     import networkx as nx
-    req_edges = [(u, v) for u, v, d in g.edges(data=True) if d.get("kind") == "requires"]
-    req = g.edge_subgraph(req_edges) if req_edges else g.subgraph([])
-    if target not in req:
-        return set()
-    return set(nx.ancestors(req, target))
+    if target not in g:
+        raise KeyError(target)
+    return set(nx.ancestors(requires_graph(g), target))
+
+
+def _order(g, nodes: set[str]) -> list[str]:
+    """Topological order of `nodes` under requires; ties by (level, slug) for determinism.
+
+    Raises:
+        ValueError: the requires edges among `nodes` contain a cycle.
+    """
+    import networkx as nx
+    sub = requires_graph(g).subgraph(nodes)
+    key = lambda n: (_LEVEL_ORDER.get(g.nodes[n].get("level"), 1), n)
+    try:
+        return list(nx.lexicographical_topological_sort(sub, key=key))
+    except nx.NetworkXUnfeasible:
+        cycle = " -> ".join(u for u, _ in nx.find_cycle(sub))
+        raise ValueError(f"requires cycle: {cycle}") from None
+
+
+def _conflicts_of(g, slug: str) -> set[str]:
+    """Skills that conflict with `slug`, declared in either direction."""
+    declared = set(g.nodes[slug].get("conflicts", []))
+    declared |= {n for n in g if slug in g.nodes[n].get("conflicts", [])}
+    return {c for c in declared if c in g}
 
 
 def learning_path(g, target: str) -> dict:
-    """Return an ordered learning path to reach `target`, plus see-also / conflicts."""
-    import networkx as nx
-    prereqs = prerequisite_closure(g, target)
-    nodes = prereqs | {target}
-    req_edges = [(u, v) for u, v, d in g.edges(data=True)
-                 if d.get("kind") == "requires" and u in nodes and v in nodes]
-    sub = g.edge_subgraph(req_edges) if req_edges else g.subgraph(nodes)
-    try:
-        ordered = [n for n in nx.topological_sort(sub) if n in nodes]
-    except nx.NetworkXUnfeasible:
-        ordered = list(nodes)
-    for n in nodes:                       # include isolated prereqs
-        if n not in ordered:
-            ordered.insert(0, n)
-    related = [v for u, v, d in g.edges(target, data=True) if d.get("kind") == "related"]
-    conflicts = [v for u, v, d in g.edges(target, data=True) if d.get("kind") == "conflicts"]
-    return {"target": target, "path": ordered, "related": related, "conflicts": conflicts}
+    """Return an ordered learning path to reach `target`, plus see-also / conflicts.
+
+    Returns:
+        {"target", "path" (prereqs in topological order, ending at target), "related"
+        (target's see-also, minus anything already on the path), "conflicts" (skills that
+        conflict with any skill on the path), "path_conflicts" (conflicting pairs *within*
+        the path)}.
+
+    Raises:
+        KeyError: unknown target. ValueError: a requires cycle blocks ordering.
+    """
+    nodes = prerequisite_closure(g, target) | {target}
+    ordered = _order(g, nodes)
+    related = [r for r in g.nodes[target].get("related", []) if r in g and r not in nodes]
+    conflicts: set[str] = set()
+    path_conflicts: set[tuple[str, str]] = set()
+    for n in ordered:
+        for c in _conflicts_of(g, n):
+            if c in nodes:
+                path_conflicts.add(tuple(sorted((n, c))))
+            else:
+                conflicts.add(c)
+    return {"target": target, "path": ordered, "related": related,
+            "conflicts": sorted(conflicts), "path_conflicts": [list(p) for p in sorted(path_conflicts)]}

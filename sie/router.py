@@ -5,6 +5,7 @@ Usage:
     python -m sie.router "your task description"        # query (hybrid + rerank)
     python -m sie.router "your task" --no-rerank        # ablation: RRF only
     python -m sie.router "your task" --mode dense       # ablation: one retriever only
+    python -m sie.router --path rag-evaluation          # GraphRAG learning path
 """
 from __future__ import annotations
 import argparse
@@ -171,6 +172,35 @@ class HybridRouter:
         return dedup_by_skill(fused, k)
 
 
+def format_learning_path(skills_dir: str, target: str) -> str:
+    """Human-readable learning path to `target`: ordered steps, see-also, conflicts.
+
+    Raises:
+        KeyError: unknown slug (message suggests close matches). ValueError: requires cycle.
+    """
+    import difflib
+    from .graph.build import build_graph
+    from .graph.paths import learning_path
+    g = build_graph(load_corpus(skills_dir))
+    if target not in g:
+        close = difflib.get_close_matches(target, list(g.nodes), n=3)
+        raise KeyError(f"unknown skill '{target}'" + (f"; did you mean {', '.join(close)}?" if close else ""))
+    lp = learning_path(g, target)
+    steps = len(lp["path"])
+    lines = [f"[path] learning path to {target} ({steps} step{'s' if steps != 1 else ''}, "
+             f"hard `requires` edges only)"]
+    for i, slug in enumerate(lp["path"], 1):
+        n = g.nodes[slug]
+        mark = "  <- target" if slug == target else ""
+        lines.append(f"  {i}. {slug:26s} [{n['skill_type']}/{n['domain']}, {n['level']}]{mark}")
+    lines.append(f"  see also:  {', '.join(lp['related']) or 'none'}")
+    lines.append(f"  conflicts: {', '.join(lp['conflicts']) or 'none'}")
+    if lp["path_conflicts"]:
+        lines.append("  WARNING conflicting skills on the path: "
+                     + "; ".join(" <-> ".join(p) for p in lp["path_conflicts"]))
+    return "\n".join(lines)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Hybrid skill retrieval: dense + BM25 -> RRF -> rerank.")
     ap.add_argument("query", nargs="?", help="task description to route")
@@ -180,9 +210,16 @@ def main() -> None:
     ap.add_argument("--no-rerank", action="store_true", help="skip the cross-encoder (ablation)")
     ap.add_argument("--mode", choices=MODES, default="hybrid", help="retrievers to use")
     ap.add_argument("--pool", type=int, default=20, help="candidate chunks per retriever")
+    ap.add_argument("--path", metavar="SLUG", help="print the learning path to SLUG (no index needed)")
     args = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(errors="replace")   # never crash on a cp1252 console
+    if args.path:
+        try:
+            print(format_learning_path(args.skills, args.path))
+        except (KeyError, ValueError) as e:
+            sys.exit(f"[path] {e.args[0] if e.args else e}")
+        return
     r = HybridRouter(skills_dir=args.skills, use_reranker=not args.no_rerank, mode=args.mode)
     try:
         if args.build:
