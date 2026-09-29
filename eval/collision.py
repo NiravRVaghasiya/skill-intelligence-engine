@@ -56,9 +56,17 @@ def sie_run(skills_dir: Path, persist_dir: Path, build: bool) -> dict:
     r = HybridRouter(skills_dir=str(skills_dir), persist_dir=str(persist_dir))
     if build:
         r.build()
-    hits = r.retrieve(QUERY, k=5)
-    return {"ranking": "cross-encoder" if r.reranker else "rrf (no reranker weights)",
-            "route": [{"slug": h.skill_slug, "score": round(h.score, 4), "section": h.section} for h in hits]}
+    result = r.route(QUERY, k=5)
+    return {"ranking": ranking_label(result),
+            "route": [{"slug": h.skill_slug, "score": round(h.score, 4), "section": h.section}
+                      for h in result.hits]}
+
+
+def ranking_label(result) -> str:
+    """What ordered this RouteResult: the cross-encoder only if it actually ran on it."""
+    if result.reranked:
+        return "cross-encoder"
+    return "rrf (no reranker weights)" if result.rerank_error else "rrf"
 
 
 def _release_chroma() -> None:

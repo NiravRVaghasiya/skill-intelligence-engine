@@ -1,15 +1,37 @@
-# Tests need no model libraries: chromadb / sentence-transformers are deliberately NOT
-# installed here, so any test that reaches for them (or the network) fails. See CLAUDE.md G3/G4.
+# Tests need no model libraries: chromadb / sentence-transformers / torch are deliberately NOT
+# installed here (only the core + `api` + `dev` extras), so any test that reaches for them (or
+# the network) fails instead of silently downloading a model. See CLAUDE.md G3/G4.
+# Hybrid regression runs network-free too: `eval.run_eval --smoke` replays the recorded dense
+# rankings (tests/fixtures/dense_rankings.json) and compares against benchmarks/metrics.json.
 name: tests
 on: [push, pull_request]
+permissions:
+  contents: read
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - run: pip install rank-bm25 networkx fastapi httpx pydantic python-frontmatter numpy pytest
-      - run: python -m sie.ingest --skills data/skills --expect 38
-      - run: pytest -q
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install (core + api + dev extras; no model libraries)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[api,dev]"
+      - name: Ingest the vendored corpus
+        run: python -m sie.ingest --skills data/skills --expect 38
+      - name: Unit tests
+        run: pytest -q
+      - name: Evaluation smoke (no index, no models; exits 1 on any metric regression)
+        run: python -m eval.run_eval --smoke

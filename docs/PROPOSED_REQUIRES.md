@@ -6,6 +6,12 @@ proposes additions **for the upstream maintainer to review**. The vendored corpu
 `data/skills/` is deliberately left unchanged, and every learning path and benchmark in this repo
 uses the corpus as published.
 
+The 9 accepted edges are also a machine-readable **edge overlay**,
+[`proposed_requires.edges.json`](proposed_requires.edges.json) (confidence `proposed`). It is
+applied only on request: `python -m sie.router --path <slug> --overlay docs/proposed_requires.edges.json`,
+`--multi --overlay ...`, or `SIE_EDGE_OVERLAYS` for the API. Steps that depend on it are marked
+`(proposed)` and keep this page as their provenance.
+
 **How these were produced.** Four proposer agents (one per domain group) read the
 SKILL.md bodies and proposed an edge only when the skill's own text *uses* something the
 prerequisite teaches and does not explain it, quoting that text as evidence. One

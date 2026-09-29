@@ -1,8 +1,50 @@
+[build-system]
+requires = ["setuptools>=77"]          # PEP 639 license expression
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "skill-intelligence-engine"
-version = "0.1.0"
-description = "Hybrid RAG + GraphRAG engine over the ml-ai-skills library"
+version = "0.2.0"                      # keep in sync with sie/__init__.py (tests check)
+description = "Corpus-agnostic retrieval, ranking, explanation, evaluation and composition layer for SKILL.md skill libraries"
+readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["rag", "graphrag", "retrieval", "bm25", "skills", "agents"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# The core (ingest, BM25 routing in mode "sparse", graph, composition) needs only these.
+dependencies = [
+    "python-frontmatter>=1.1.0",       # brings PyYAML
+    "networkx>=3.2",
+    "rank-bm25>=0.2.2",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+retrieval = ["chromadb>=1.0"]                                  # dense index (modes hybrid / dense)
+reranker = ["sentence-transformers>=3.0.0"]                    # cross-encoder reranking
+api = ["fastapi>=0.115.0", "uvicorn>=0.30.0", "pydantic>=2.7"]  # sie.api
+evaluation = ["matplotlib>=3.8", "pyyaml>=6"]                   # eval/ (chart, source queries)
+llm = ["openai>=1.40"]                                          # optional LLM judge / narration
+demo = ["streamlit>=1.30"]                                      # demo/app_streamlit.py
+# TestClient backend: starlette 1.x imports httpx2 (and declares httpx2>=2.0.0 in its own
+# `full` extra), falling back to httpx with a deprecation warning; older starlette needs httpx.
+dev = ["pytest>=8.0", "httpx>=0.27", "httpx2>=2.0.0", "skill-intelligence-engine[api]"]
+all = ["skill-intelligence-engine[retrieval,reranker,api,evaluation]"]
+
+[project.scripts]
+sie-ingest = "sie.ingest:main"
+sie-route = "sie.router:main"
+
+[tool.setuptools.packages.find]
+include = ["sie*"]                     # eval/ and tests/ are repo tooling, not shipped
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["integration: needs real models and a built index (opt-in: SIE_INTEGRATION=1)"]

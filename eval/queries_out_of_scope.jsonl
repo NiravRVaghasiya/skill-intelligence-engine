@@ -1,0 +1,30 @@
+{"query": "my sourdough starter smells like nail polish remover and isn't rising anymore, is it dead?", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "cheapest way from Lisbon airport to Sintra with two big suitcases", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "Can I deduct a home office as a W-2 employee if I only work remotely three days a week?", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "how do I tell my roommate she keeps eating my groceries without it turning into a fight", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "beginner strength training plan, 3 days a week, only adjustable dumbbells at home", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "tomato leaves yellowing from the bottom up even though I water every morning", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "What's a polite way to decline a wedding invitation from a coworker I barely know?", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "grinding noise when I brake, but only on cold mornings, and it goes away after a few miles", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "Our cat started peeing outside the litter box right after we moved apartments. What could be going on?", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "recommend a few novels in the vein of The Remains of the Day for a 12-hour flight", "gold": null, "category": "unrelated", "origin": "synthetic-llm"}
+{"query": "flex children won't shrink below their content width, so long text overflows the card instead of wrapping", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "Postgres does a seq scan on orders despite a btree index on created_at. The WHERE clause wraps that column in date_trunc - is that why?", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "after applying a default-deny NetworkPolicy, pods in the payments namespace can't reach redis in the cache namespace, although DNS still resolves", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "someone committed a 2 GB video five commits ago and now GitHub rejects every push. how do I scrub it from history without wrecking everyone's clones?", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "Why does useEffect run twice on mount in dev mode but only once in the production build?", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "regex for semver strings like 1.4.0-rc.2+build.7 that rejects leading zeros such as 01.2.3", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "terraform apply fails with 'Error acquiring the state lock' and the CI job that held it was cancelled an hour ago", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "Spring Boot service heap climbs steadily until the pod gets OOMKilled after about 6 hours. least painful way to capture and read a heap dump?", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "VLOOKUP returns #N/A even though I can literally see the matching ID on the other sheet", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "ran pip install -e . but the console script declared under [project.scripts] in pyproject.toml never shows up on PATH", "gold": null, "category": "adjacent", "origin": "synthetic-llm"}
+{"query": "SDXL: does DPM++ 2M Karras really give cleaner hands than Euler a, or is that just forum folklore?", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "whisper + pyannote diarization on a 2-hour podcast: speaker turns start ~300 ms before the words they belong to. best way to line them up?", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "message-passing GNN for molecules: why does adding a single virtual node connected to every atom help when the target depends on atoms more than 10 bonds apart?", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "Prove there are infinitely many primes congruent to 3 mod 4.", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "writing a genetic algorithm for the travelling salesman problem - which crossover operator guarantees every child is still a valid tour?", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "Is Manhattan distance still admissible for A* once my grid allows diagonal moves?", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "quadcopter roll axis oscillates harder every time I raise Kp. where should Ki and Kd start when tuning the PID loop?", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "formulate weekly nurse shift scheduling as an integer linear program in PuLP: at least 11 hours rest between shifts, max 5 shifts per nurse per week", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "ORB-SLAM2 loses tracking and never detects loop closure when the robot drives down long featureless corridors", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}
+{"query": "a pure 50 Hz sine shows energy smeared across neighbouring FFT bins. is that spectral leakage, and would a Hann window fix it?", "gold": null, "category": "near-miss", "origin": "synthetic-llm"}

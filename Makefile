@@ -4,10 +4,13 @@
 # override: make setup SOURCE=/path/to/ml-ai-skills (a trailing comment would leak spaces into the value)
 SOURCE ?= ../ml-ai-skills
 
-.PHONY: install setup build query path eval collision test serve demo clean
+.PHONY: install install-dev setup build query route path eval smoke perf collision test serve demo clean
 
-install:            ## install python deps
+install:            ## install python deps (flat list: index, rerank, API, eval, tests)
 	pip install -r requirements.txt
+
+install-dev:        ## install the package editable with every extra (see pyproject.toml)
+	pip install -e ".[all,dev]"
 
 setup:              ## vendor corpus from SOURCE + build indexes
 	python scripts/setup_corpus.py --source "$(SOURCE)"
@@ -18,11 +21,20 @@ build:              ## (re)build indexes from data/skills
 query:              ## example query — override Q="..."
 	python -m sie.router "$(or $(Q),impute missing values and encode categoricals)"
 
+route:              ## full explained RouteResult as JSON — override Q="..."
+	python -m sie.router "$(or $(Q),impute missing values and encode categoricals)" --json
+
 path:               ## learning path — override T=<slug>
 	python -m sie.router --path "$(or $(T),rag-evaluation)"
 
-eval:               ## run the baseline-vs-SIE evaluation
+eval:               ## run the baseline-vs-SIE evaluation (rebuilds the index; writes benchmarks/)
 	python -m eval.run_eval
+
+smoke:              ## CI regression check: no index, no models, no writes
+	python -m eval.run_eval --smoke
+
+perf:               ## machine-dependent latency/quality sweep (writes benchmarks/PERFORMANCE.md)
+	python -m eval.perf
 
 collision:          ## reproduce the documented keyword-collision case
 	python -m eval.collision --source "$(SOURCE)"
@@ -30,10 +42,10 @@ collision:          ## reproduce the documented keyword-collision case
 test:               ## run the test suite
 	pytest -q
 
-serve:              ## start the FastAPI service
+serve:              ## start the FastAPI service (config: SIE_* variables, see .env.example)
 	uvicorn sie.api:api --reload
 
-demo:               ## launch the Streamlit demo (pip install streamlit first; not in requirements.txt)
+demo:               ## launch the Streamlit demo (pip install -e ".[demo]" first)
 	streamlit run demo/app_streamlit.py
 
 clean:              ## remove built indexes and caches
