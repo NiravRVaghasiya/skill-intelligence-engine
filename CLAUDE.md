@@ -1,8 +1,8 @@
 # CLAUDE.md — Working Agreement for the Skill Intelligence Engine
 
 This file is read by any AI coding agent (Claude Code, Cursor, etc.) **before** editing this repo.
-It encodes the conventions and guardrails. `README.md` (status table) says what is implemented,
-experimental, optional or planned; `benchmarks/RESULTS.md` says what is measured. Read both, then work.
+It encodes the conventions and guardrails. `README.md` gives the overview, headline results and limitations;
+`benchmarks/RESULTS.md` says what is measured. Read both, then work.
 
 ---
 
@@ -21,9 +21,9 @@ FastAPI service**, not a hosted product.
 
 - **G1 — Don't restructure.** Keep the package layout and module names in `sie/`, `eval/`, `tests/`,
   `demo/`. Fill in and harden; do not rename or move modules without flagging it first.
-- **G2 — LLM-optional core.** Retrieval, GraphRAG, and every test must pass with **no API key**.
-  `sie/llm.py` defaults to the `noop` provider — keep it that way. The LLM is only for the optional
-  LLM-as-judge and path narration.
+- **G2 — LLM-optional core.** Retrieval, graph reasoning, and every test must pass with **no API key**.
+  `sie/llm.py` defaults to the `noop` provider — keep it that way. The engine never calls it; the only
+  LLM use is the optional judge helper `eval/judge.py`.
 - **G3 — Lazy heavy imports.** `chromadb`, `sentence-transformers`, and the cross-encoder import
   **inside methods**, never at module top level, so `pytest` runs without them installed. Preserve this.
 - **G4 — Tests never download models.** Mock the dense index / reranker in tests. CI must be fast and
@@ -76,19 +76,29 @@ FastAPI service**, not a hosted product.
 - [ ] The documented vocabulary-collision case is reproduced (keyword wrong / SIE correct top-1).
 - [ ] `learning_path()` correct for ≥ 3 targets; `find_cycles()` empty on the real corpus.
 - [ ] All FastAPI endpoints respond; `pytest` green locally and in CI with no model downloads.
-- [ ] `README.md` status table and caveats match what is implemented and measured.
+- [ ] `README.md` results blocks are regenerated (not hand-edited) and its limitations match what is
+      implemented and measured.
 
 ## Where things live
 
 ```
 CLAUDE.md           this file — conventions & guardrails
-README.md           public-facing: positioning, status, quickstart, benchmarks
-sie/                core package (corpus, ingest, chunking, index/, rerank, router, confidence,
-                    compose, graph/, engine, api, schemas, observability, llm)
-eval/               datasets.toml + query sets, metrics, run_eval, replay, perf, collision, baseline/
-benchmarks/         RESULTS.md, metrics.json, per_query.jsonl, PERFORMANCE.md, charts (all generated)
+README.md           public-facing: positioning, quickstart, generated results blocks, limitations
+sie/                core package (corpus, ingest, chunking, index/, rerank, hub, router, confidence,
+                    compose, graph/, engine, api, schemas, observability, models, llm)
+eval/               datasets.toml + query sets, datasets, metrics, report, run_eval, replay, perf,
+                    collision, build_source_queries, judge (optional), baseline/ (vendored keyword router)
+benchmarks/         RESULTS.md, metrics.json, per_query.jsonl, collision.json, performance.json,
+                    PERFORMANCE.md, charts (all generated)
 tests/              pytest — heavy models mocked and blocked; fixtures/; integration/ (opt-in)
+docs/               PROPOSED_REQUIRES.md + proposed_requires.edges.json (opt-in edge overlay)
 data/skills/        the vendored default corpus (+ corpus.toml); any corpus works via --skills
+data/chroma/        built dense index (git-ignored)
+demo/               optional Streamlit UI
+scripts/            setup_corpus.py (vendor a corpus + build the index)
+Makefile, setup.bat dev shortcuts (install, build, eval, smoke, test, serve) / Windows setup
+.github/workflows/  tests.yml — CI: ingest --expect 38, pytest, run_eval --smoke
+.env.example        every SIE_* setting the API reads
 ```
 
 ## Anti-patterns (do NOT do these)
