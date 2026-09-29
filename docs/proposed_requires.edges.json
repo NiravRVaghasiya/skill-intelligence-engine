@@ -1,0 +1,77 @@
+{
+  "description": "The 9 accepted `requires` edges from docs/PROPOSED_REQUIRES.md, as an SIE edge overlay (source = prerequisite, target = the skill that depends on it). Proposed for upstream review; NOT applied anywhere by default. Apply explicitly: build_graph(skills, overlays=load_overlay('docs/proposed_requires.edges.json')).",
+  "edges": [
+    {
+      "source": "neural-net-fundamentals",
+      "target": "cnn-vision",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "cnn-vision explains VGG's depth limit ('~20 layers due to vanishing gradients') and ResNet's skip connections ('The identity shortcut gives gradients a direct path back to early layers') through gradient flow, which it does not teach."
+    },
+    {
+      "source": "pytorch-patterns",
+      "target": "computer-vision",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "Workflow step 4 runs 'DataLoader(train_dataset, ..., collate_fn=lambda b: tuple(zip(*b)))' with model.train() / loss.backward() / optimizer.step(), but never defines train_dataset; writing that Dataset is pytorch-patterns material."
+    },
+    {
+      "source": "supervised-learning",
+      "target": "explainability",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "inputs: 'A fitted, sklearn-compatible model plus held-out feature data'; Workflow step 1: 'Already have a fitted sklearn-compatible estimator `model`'."
+    },
+    {
+      "source": "data-preprocessing",
+      "target": "feature-engineering",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "Overview: 'Assumes the input is already cleaned/imputed/scaled (see `data-preprocessing`)'; inputs: 'A cleaned, imputed/scaled train/test split (see data-preprocessing)'."
+    },
+    {
+      "source": "model-evaluation",
+      "target": "hyperparameter-tuning",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "Overview: 'Assumes the metric to optimize is already decided (see `model-evaluation`)'; inputs: 'a decided optimization metric (see model-evaluation)'; the body is built on cross-validation."
+    },
+    {
+      "source": "pytorch-patterns",
+      "target": "model-optimization",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "The workflow code uses model.eval() with torch.no_grad(), quantize_dynamic on torch.nn.Linear, torch.save(quantized_model.state_dict(), ...) and a teacher.eval() distillation loop over train_loader."
+    },
+    {
+      "source": "llm-evaluation",
+      "target": "rag-evaluation",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "Workflow step 4: 'This is the RAG-specific application of the faithfulness check in [[llm-evaluation]]'; its code is 'Illustrative structure only' and points to llm-evaluation step 5 for the runnable check."
+    },
+    {
+      "source": "neural-net-fundamentals",
+      "target": "rnn-sequence",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "Key Concepts, BPTT: 'the same product-of-derivatives that causes vanishing/exploding gradients in deep nets (see neural-net-fundamentals) causes it here too' -- the mechanism is handed off, not explained."
+    },
+    {
+      "source": "pytorch-patterns",
+      "target": "training-deep-models",
+      "relationship": "requires",
+      "confidence": "proposed",
+      "provenance": "docs/PROPOSED_REQUIRES.md",
+      "evidence": "inputs: 'An existing PyTorch training loop and a goal' -- the artifact pytorch-patterns outputs (idiomatic Dataset/DataLoader, train/eval loop)."
+    }
+  ]
+}

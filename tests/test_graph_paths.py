@@ -156,3 +156,41 @@ def test_see_also_is_deduplicated_and_never_lists_a_conflict():
     g = build_graph([_s("a"), _s("x", conflicts=["t"]), _s("y"), _s("t", requires=["a"], related=["x", "y", "y", "a"])])
     lp = learning_path(g, "t")
     assert lp["related"] == ["y"] and lp["conflicts"] == ["x"]
+
+
+# --- sie.graph.paths.render_learning_path reproduces the CLI output, then explains ---------
+
+@pytest.mark.parametrize("target", ["rag-evaluation", "agent-evaluation", "rag-pipeline", "training-deep-models"])
+def test_render_learning_path_starts_with_the_cli_output(real, target):
+    from sie.graph.paths import render_learning_path
+    from sie.router import format_learning_path
+    cli = format_learning_path(str(CORPUS), target).splitlines()
+    rendered = render_learning_path(real, learning_path(real, target)).splitlines()
+    assert rendered[:len(cli)] == cli
+    assert all(line.startswith(("  why: ", "  note: ", "  recommended before ")) for line in rendered[len(cli):])
+
+
+def test_render_learning_path_matches_cli_on_conflicts_and_missing_prereqs(tmp_path):
+    from sie.graph.paths import render_learning_path
+    from sie.router import format_learning_path
+    for slug, fm in {"a": "conflicts:\n  - b", "b": "requires:\n  - a\n  - ghost", "x": "conflicts:\n  - b"}.items():
+        (tmp_path / slug).mkdir()
+        (tmp_path / slug / "SKILL.md").write_text(
+            f"---\ntype: workflow\ndomain: d\nlevel: intermediate\n{fm}\n---\n## Overview\nhi\n", encoding="utf-8")
+    cli = format_learning_path(str(tmp_path), "b").splitlines()
+    g = build_graph(load_corpus(tmp_path))
+    assert render_learning_path(g, learning_path(g, "b")).splitlines() == cli   # CLI delegates
+    assert cli[5:7] == ["  WARNING conflicting skills on the path: a <-> b",
+                        "  WARNING prerequisites not in the corpus (typo?): b requires 'ghost'"]
+    assert cli[7:] == ["  why: a: direct prerequisite of b",
+                       "  note: a does not declare prerequisites; the path may be incomplete",
+                       "  note: b requires 'ghost', which is not in the corpus; it is omitted"]
+
+
+def test_new_learning_path_keys_on_real_paths(real):
+    lp = learning_path(real, "agent-evaluation")
+    assert lp["direct"] == ["agents-and-tools"] and lp["transitive"] == []
+    assert [(s["skill"], s["relation"], s["depth"]) for s in lp["steps"]] == [
+        ("agents-and-tools", "direct", 1), ("agent-evaluation", "target", 0)]
+    assert lp["complete"] is True and lp["recommended"] == []
+    assert learning_path(real, "fine-tuning-llms")["notes"] == ["fine-tuning-llms declares no prerequisites"]

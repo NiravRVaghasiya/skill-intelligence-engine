@@ -1,0 +1,9 @@
+# Manifest for the vendored default corpus. SIE reads any corpus with this layout;
+# nothing in sie/ depends on these values.
+name = "ml-ai-skills"
+version = "8328c60"          # upstream commit the files were vendored from
+source = "https://github.com/NiravRVaghasiya/ml-ai-skills"
+license = "MIT"
+
+[layout]
+pattern = "**/SKILL.md"
