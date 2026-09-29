@@ -1,0 +1,1701 @@
+{
+  "config": {
+    "compose_k": 3,
+    "depth": 10,
+    "max_intents": 5,
+    "pool": 20,
+    "rerank_k": null,
+    "rrf_k": 60
+  },
+  "corpus": {
+    "chunk_fingerprint": "f4b5d55da6d7c783",
+    "fingerprint": "7d62d861fc8ce6a7",
+    "n_chunks": 297,
+    "n_skills": 38,
+    "name": "ml-ai-skills",
+    "version": "8328c60"
+  },
+  "datasets": {
+    "main": {
+      "kind": "routing",
+      "n": 88,
+      "origins": {
+        "scaffold": 12,
+        "synthetic-llm": 76
+      },
+      "path": "eval/queries.jsonl",
+      "sha256": "25bfe6665e7ea497aa228aaef37513ec211fa6bc5d65d951b9bd7c2fc50b6321"
+    },
+    "multi-intent": {
+      "kind": "multi_intent",
+      "n": 25,
+      "origins": {
+        "synthetic-llm": 25
+      },
+      "path": "eval/queries_multi_intent.jsonl",
+      "sha256": "b9d6ab1ea82058b6be3d93cd412f8bd427c2068c4c1fb75514f56bf02c023101"
+    },
+    "out-of-scope": {
+      "kind": "out_of_scope",
+      "n": 30,
+      "origins": {
+        "synthetic-llm": 30
+      },
+      "path": "eval/queries_out_of_scope.jsonl",
+      "sha256": "ac81f086c35e101f0e24da965d78c0eb9857259b22aca7f1e31c8b58183c73bf"
+    },
+    "source": {
+      "kind": "routing",
+      "n": 23,
+      "origins": {
+        "source-authored": 23
+      },
+      "path": "eval/queries_source_evals.jsonl",
+      "sha256": "282591082f8e0a2934eb6063599c1bcf98e2bed6d2e60a70c8939eef70f89adc"
+    }
+  },
+  "generated_by": "python -m eval.run_eval",
+  "metrics": {
+    "main": {
+      "bm25": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 49,
+            "share": 0.556818
+          },
+          "route": {
+            "n": 39,
+            "share": 0.443182
+          }
+        },
+        "confidence": {
+          "abstain_rate": 0.0,
+          "accuracy": 0.920455,
+          "by_action": {
+            "abstain": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "accuracy": 0.857143,
+              "n": 49,
+              "share": 0.556818
+            },
+            "route": {
+              "accuracy": 1.0,
+              "n": 39,
+              "share": 0.443182
+            }
+          },
+          "by_level": {
+            "high": {
+              "accuracy": 1.0,
+              "n": 39,
+              "share": 0.443182
+            },
+            "low": {
+              "accuracy": 0.857143,
+              "n": 49,
+              "share": 0.556818
+            },
+            "medium": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "none": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "coverage": 0.443182,
+          "n": 88,
+          "routed_accuracy": 1.0
+        },
+        "mrr": 0.948864,
+        "ndcg@3": 0.959009,
+        "ndcg@5": 0.959009,
+        "recall@3": 0.988636,
+        "recall@5": 0.988636,
+        "ties": {
+          "tied_top1": 0,
+          "top-1_expected": 0.920455
+        },
+        "top-1": 0.920455
+      },
+      "bm25-card": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 88,
+            "share": 1.0
+          }
+        },
+        "mrr": 0.805822,
+        "ndcg@3": 0.810333,
+        "ndcg@5": 0.824517,
+        "recall@3": 0.863636,
+        "recall@5": 0.897727,
+        "ties": {
+          "tied_top1": 0,
+          "top-1_expected": 0.727273
+        },
+        "top-1": 0.727273
+      },
+      "dense": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 5,
+            "share": 0.056818
+          },
+          "route": {
+            "n": 83,
+            "share": 0.943182
+          }
+        },
+        "confidence": {
+          "abstain_rate": 0.0,
+          "accuracy": 0.886364,
+          "by_action": {
+            "abstain": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "accuracy": 0.8,
+              "n": 5,
+              "share": 0.056818
+            },
+            "route": {
+              "accuracy": 0.891566,
+              "n": 83,
+              "share": 0.943182
+            }
+          },
+          "by_level": {
+            "high": {
+              "accuracy": 0.891566,
+              "n": 83,
+              "share": 0.943182
+            },
+            "low": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "medium": {
+              "accuracy": 0.8,
+              "n": 5,
+              "share": 0.056818
+            },
+            "none": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "coverage": 0.943182,
+          "n": 88,
+          "routed_accuracy": 0.891566
+        },
+        "mrr": 0.926515,
+        "ndcg@3": 0.93777,
+        "ndcg@5": 0.942166,
+        "recall@3": 0.977273,
+        "recall@5": 0.988636,
+        "ties": {
+          "tied_top1": 0,
+          "top-1_expected": 0.886364
+        },
+        "top-1": 0.886364
+      },
+      "hybrid": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 16,
+            "share": 0.181818
+          },
+          "route": {
+            "n": 72,
+            "share": 0.818182
+          }
+        },
+        "confidence": {
+          "abstain_rate": 0.0,
+          "accuracy": 0.954545,
+          "by_action": {
+            "abstain": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "accuracy": 0.75,
+              "n": 16,
+              "share": 0.181818
+            },
+            "route": {
+              "accuracy": 1.0,
+              "n": 72,
+              "share": 0.818182
+            }
+          },
+          "by_level": {
+            "high": {
+              "accuracy": 1.0,
+              "n": 72,
+              "share": 0.818182
+            },
+            "low": {
+              "accuracy": 0.5,
+              "n": 2,
+              "share": 0.022727
+            },
+            "medium": {
+              "accuracy": 0.785714,
+              "n": 14,
+              "share": 0.159091
+            },
+            "none": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "coverage": 0.818182,
+          "n": 88,
+          "routed_accuracy": 1.0
+        },
+        "mrr": 0.97197,
+        "ndcg@3": 0.974567,
+        "ndcg@5": 0.978963,
+        "recall@3": 0.988636,
+        "recall@5": 1.0,
+        "ties": {
+          "tied_top1": 2,
+          "top-1_expected": 0.943182
+        },
+        "top-1": 0.954545
+      },
+      "keyword": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 88,
+            "share": 1.0
+          }
+        },
+        "mrr": 0.572795,
+        "ndcg@3": 0.571966,
+        "ndcg@5": 0.610123,
+        "recall@3": 0.670455,
+        "recall@5": 0.761364,
+        "ties": {
+          "tied_top1": 13,
+          "top-1_expected": 0.432765
+        },
+        "top-1": 0.431818
+      },
+      "keyword-shipped": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 88,
+            "share": 1.0
+          }
+        },
+        "mrr": 0.547917,
+        "ndcg@3": 0.56209,
+        "ndcg@5": 0.604145,
+        "recall@3": 0.670455,
+        "recall@5": 0.772727,
+        "ties": {
+          "tied_top1": 13,
+          "top-1_expected": 0.410038
+        },
+        "top-1": 0.409091
+      }
+    },
+    "multi-intent": {
+      "bm25": {
+        "by_n_intents": {
+          "1": {
+            "compose": {
+              "count_match": 1.0,
+              "exact": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "split_match": 0.8
+            },
+            "n": 5,
+            "single_top1": {
+              "count_match": 1.0,
+              "exact": 1.0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 1.0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          },
+          "2": {
+            "compose": {
+              "count_match": 0.428571,
+              "exact": 0.142857,
+              "precision": 0.714286,
+              "recall": 0.5,
+              "split_match": 0.428571
+            },
+            "n": 7,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.714286,
+              "recall": 0.357143
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.428571,
+              "precision": 0.714286,
+              "recall": 0.714286
+            }
+          },
+          "3": {
+            "compose": {
+              "count_match": 0.25,
+              "exact": 0.125,
+              "precision": 0.833333,
+              "recall": 0.5,
+              "split_match": 0.625
+            },
+            "n": 8,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.875,
+              "recall": 0.291667
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.0,
+              "precision": 0.541667,
+              "recall": 0.541667
+            }
+          },
+          "4": {
+            "compose": {
+              "count_match": 0.6,
+              "exact": 0.0,
+              "precision": 0.716667,
+              "recall": 0.65,
+              "split_match": 0.6
+            },
+            "n": 5,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 1.0,
+              "recall": 0.25
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.2,
+              "precision": 0.75,
+              "recall": 0.75
+            }
+          }
+        },
+        "compose": {
+          "count_match": 0.52,
+          "exact": 0.28,
+          "pooled_recall": 0.587302,
+          "precision": 0.81,
+          "recall": 0.63,
+          "split_match": 0.6
+        },
+        "single_top1": {
+          "count_match": 0.2,
+          "exact": 0.2,
+          "pooled_recall": 0.349206,
+          "precision": 0.88,
+          "recall": 0.443333
+        },
+        "top_n_oracle": {
+          "count_match": 1.0,
+          "exact": 0.36,
+          "pooled_recall": 0.68254,
+          "precision": 0.723333,
+          "recall": 0.723333
+        }
+      },
+      "bm25-card": {
+        "by_n_intents": {
+          "1": {
+            "n": 5,
+            "single_top1": {
+              "count_match": 1.0,
+              "exact": 0.8,
+              "precision": 0.8,
+              "recall": 0.8
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.8,
+              "precision": 0.8,
+              "recall": 0.8
+            }
+          },
+          "2": {
+            "n": 7,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.857143,
+              "recall": 0.428571
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.285714,
+              "precision": 0.642857,
+              "recall": 0.642857
+            }
+          },
+          "3": {
+            "n": 8,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 1.0,
+              "recall": 0.333333
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.25,
+              "precision": 0.583333,
+              "recall": 0.583333
+            }
+          },
+          "4": {
+            "n": 5,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 1.0,
+              "recall": 0.25
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.2,
+              "precision": 0.7,
+              "recall": 0.7
+            }
+          }
+        },
+        "single_top1": {
+          "count_match": 0.2,
+          "exact": 0.16,
+          "pooled_recall": 0.365079,
+          "precision": 0.92,
+          "recall": 0.436667
+        },
+        "top_n_oracle": {
+          "count_match": 1.0,
+          "exact": 0.36,
+          "pooled_recall": 0.650794,
+          "precision": 0.666667,
+          "recall": 0.666667
+        }
+      },
+      "dense": {
+        "by_n_intents": {
+          "1": {
+            "compose": {
+              "count_match": 1.0,
+              "exact": 0.8,
+              "precision": 0.8,
+              "recall": 0.8,
+              "split_match": 0.8
+            },
+            "n": 5,
+            "single_top1": {
+              "count_match": 1.0,
+              "exact": 0.8,
+              "precision": 0.8,
+              "recall": 0.8
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.8,
+              "precision": 0.8,
+              "recall": 0.8
+            }
+          },
+          "2": {
+            "compose": {
+              "count_match": 0.428571,
+              "exact": 0.142857,
+              "precision": 0.714286,
+              "recall": 0.5,
+              "split_match": 0.428571
+            },
+            "n": 7,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.857143,
+              "recall": 0.428571
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.285714,
+              "precision": 0.642857,
+              "recall": 0.642857
+            }
+          },
+          "3": {
+            "compose": {
+              "count_match": 0.25,
+              "exact": 0.125,
+              "precision": 0.833333,
+              "recall": 0.541667,
+              "split_match": 0.625
+            },
+            "n": 8,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 1.0,
+              "recall": 0.333333
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.0,
+              "precision": 0.625,
+              "recall": 0.625
+            }
+          },
+          "4": {
+            "compose": {
+              "count_match": 0.4,
+              "exact": 0.4,
+              "precision": 0.933333,
+              "recall": 0.7,
+              "split_match": 0.6
+            },
+            "n": 5,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 1.0,
+              "recall": 0.25
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.2,
+              "precision": 0.75,
+              "recall": 0.75
+            }
+          }
+        },
+        "compose": {
+          "count_match": 0.48,
+          "exact": 0.32,
+          "pooled_recall": 0.603175,
+          "precision": 0.813333,
+          "recall": 0.613333,
+          "split_match": 0.6
+        },
+        "single_top1": {
+          "count_match": 0.2,
+          "exact": 0.16,
+          "pooled_recall": 0.365079,
+          "precision": 0.92,
+          "recall": 0.436667
+        },
+        "top_n_oracle": {
+          "count_match": 1.0,
+          "exact": 0.28,
+          "pooled_recall": 0.68254,
+          "precision": 0.69,
+          "recall": 0.69
+        }
+      },
+      "hybrid": {
+        "by_n_intents": {
+          "1": {
+            "compose": {
+              "count_match": 1.0,
+              "exact": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "split_match": 0.8
+            },
+            "n": 5,
+            "single_top1": {
+              "count_match": 1.0,
+              "exact": 1.0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 1.0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          },
+          "2": {
+            "compose": {
+              "count_match": 0.428571,
+              "exact": 0.142857,
+              "precision": 0.714286,
+              "recall": 0.5,
+              "split_match": 0.428571
+            },
+            "n": 7,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.857143,
+              "recall": 0.428571
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.428571,
+              "precision": 0.714286,
+              "recall": 0.714286
+            }
+          },
+          "3": {
+            "compose": {
+              "count_match": 0.25,
+              "exact": 0.125,
+              "precision": 0.895833,
+              "recall": 0.541667,
+              "split_match": 0.625
+            },
+            "n": 8,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 1.0,
+              "recall": 0.333333
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.125,
+              "precision": 0.625,
+              "recall": 0.625
+            }
+          },
+          "4": {
+            "compose": {
+              "count_match": 0.6,
+              "exact": 0.2,
+              "precision": 0.8,
+              "recall": 0.65,
+              "split_match": 0.6
+            },
+            "n": 5,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 1.0,
+              "recall": 0.25
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.4,
+              "precision": 0.85,
+              "recall": 0.85
+            }
+          }
+        },
+        "compose": {
+          "count_match": 0.52,
+          "exact": 0.32,
+          "pooled_recall": 0.603175,
+          "precision": 0.846667,
+          "recall": 0.643333,
+          "split_match": 0.6
+        },
+        "single_top1": {
+          "count_match": 0.2,
+          "exact": 0.2,
+          "pooled_recall": 0.380952,
+          "precision": 0.96,
+          "recall": 0.476667
+        },
+        "top_n_oracle": {
+          "count_match": 1.0,
+          "exact": 0.44,
+          "pooled_recall": 0.746032,
+          "precision": 0.77,
+          "recall": 0.77
+        }
+      },
+      "keyword": {
+        "by_n_intents": {
+          "1": {
+            "n": 5,
+            "single_top1": {
+              "count_match": 1.0,
+              "exact": 0.8,
+              "precision": 0.8,
+              "recall": 0.8
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.8,
+              "precision": 0.8,
+              "recall": 0.8
+            }
+          },
+          "2": {
+            "n": 7,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.714286,
+              "recall": 0.357143
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.285714,
+              "precision": 0.5,
+              "recall": 0.5
+            }
+          },
+          "3": {
+            "n": 8,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.75,
+              "recall": 0.25
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.125,
+              "precision": 0.458333,
+              "recall": 0.458333
+            }
+          },
+          "4": {
+            "n": 5,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.8,
+              "recall": 0.2
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.2,
+              "precision": 0.7,
+              "recall": 0.7
+            }
+          }
+        },
+        "single_top1": {
+          "count_match": 0.2,
+          "exact": 0.16,
+          "pooled_recall": 0.301587,
+          "precision": 0.76,
+          "recall": 0.38
+        },
+        "top_n_oracle": {
+          "count_match": 1.0,
+          "exact": 0.32,
+          "pooled_recall": 0.571429,
+          "precision": 0.586667,
+          "recall": 0.586667
+        }
+      },
+      "keyword-shipped": {
+        "by_n_intents": {
+          "1": {
+            "n": 5,
+            "single_top1": {
+              "count_match": 1.0,
+              "exact": 0.6,
+              "precision": 0.6,
+              "recall": 0.6
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.6,
+              "precision": 0.6,
+              "recall": 0.6
+            }
+          },
+          "2": {
+            "n": 7,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.714286,
+              "recall": 0.357143
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.285714,
+              "precision": 0.5,
+              "recall": 0.5
+            }
+          },
+          "3": {
+            "n": 8,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.75,
+              "recall": 0.25
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.125,
+              "precision": 0.458333,
+              "recall": 0.458333
+            }
+          },
+          "4": {
+            "n": 5,
+            "single_top1": {
+              "count_match": 0.0,
+              "exact": 0.0,
+              "precision": 0.8,
+              "recall": 0.2
+            },
+            "top_n_oracle": {
+              "count_match": 1.0,
+              "exact": 0.2,
+              "precision": 0.7,
+              "recall": 0.7
+            }
+          }
+        },
+        "single_top1": {
+          "count_match": 0.2,
+          "exact": 0.12,
+          "pooled_recall": 0.285714,
+          "precision": 0.72,
+          "recall": 0.34
+        },
+        "top_n_oracle": {
+          "count_match": 1.0,
+          "exact": 0.28,
+          "pooled_recall": 0.555556,
+          "precision": 0.546667,
+          "recall": 0.546667
+        }
+      }
+    },
+    "out-of-scope": {
+      "bm25": {
+        "by_action": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 30,
+            "share": 1.0
+          },
+          "route": {
+            "n": 0,
+            "share": 0.0
+          }
+        },
+        "by_category": {
+          "adjacent": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 10,
+              "share": 1.0
+            },
+            "route": {
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "near-miss": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 10,
+              "share": 1.0
+            },
+            "route": {
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "unrelated": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 10,
+              "share": 1.0
+            },
+            "route": {
+              "n": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "by_level": {
+          "high": {
+            "n": 0,
+            "share": 0.0
+          },
+          "low": {
+            "n": 30,
+            "share": 1.0
+          },
+          "medium": {
+            "n": 0,
+            "share": 0.0
+          },
+          "none": {
+            "n": 0,
+            "share": 0.0
+          }
+        },
+        "n": 30
+      },
+      "bm25-card": {
+        "by_action": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 30,
+            "share": 1.0
+          }
+        },
+        "by_category": {
+          "adjacent": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          },
+          "near-miss": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          },
+          "unrelated": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          }
+        },
+        "by_level": {},
+        "n": 30
+      },
+      "dense": {
+        "by_action": {
+          "abstain": {
+            "n": 26,
+            "share": 0.866667
+          },
+          "clarify": {
+            "n": 1,
+            "share": 0.033333
+          },
+          "route": {
+            "n": 3,
+            "share": 0.1
+          }
+        },
+        "by_category": {
+          "adjacent": {
+            "abstain": {
+              "n": 8,
+              "share": 0.8
+            },
+            "clarify": {
+              "n": 1,
+              "share": 0.1
+            },
+            "route": {
+              "n": 1,
+              "share": 0.1
+            }
+          },
+          "near-miss": {
+            "abstain": {
+              "n": 8,
+              "share": 0.8
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 2,
+              "share": 0.2
+            }
+          },
+          "unrelated": {
+            "abstain": {
+              "n": 10,
+              "share": 1.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "by_level": {
+          "high": {
+            "n": 3,
+            "share": 0.1
+          },
+          "low": {
+            "n": 0,
+            "share": 0.0
+          },
+          "medium": {
+            "n": 1,
+            "share": 0.033333
+          },
+          "none": {
+            "n": 26,
+            "share": 0.866667
+          }
+        },
+        "n": 30
+      },
+      "hybrid": {
+        "by_action": {
+          "abstain": {
+            "n": 26,
+            "share": 0.866667
+          },
+          "clarify": {
+            "n": 4,
+            "share": 0.133333
+          },
+          "route": {
+            "n": 0,
+            "share": 0.0
+          }
+        },
+        "by_category": {
+          "adjacent": {
+            "abstain": {
+              "n": 8,
+              "share": 0.8
+            },
+            "clarify": {
+              "n": 2,
+              "share": 0.2
+            },
+            "route": {
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "near-miss": {
+            "abstain": {
+              "n": 8,
+              "share": 0.8
+            },
+            "clarify": {
+              "n": 2,
+              "share": 0.2
+            },
+            "route": {
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "unrelated": {
+            "abstain": {
+              "n": 10,
+              "share": 1.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "by_level": {
+          "high": {
+            "n": 0,
+            "share": 0.0
+          },
+          "low": {
+            "n": 3,
+            "share": 0.1
+          },
+          "medium": {
+            "n": 1,
+            "share": 0.033333
+          },
+          "none": {
+            "n": 26,
+            "share": 0.866667
+          }
+        },
+        "n": 30
+      },
+      "keyword": {
+        "by_action": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 30,
+            "share": 1.0
+          }
+        },
+        "by_category": {
+          "adjacent": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          },
+          "near-miss": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          },
+          "unrelated": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          }
+        },
+        "by_level": {},
+        "n": 30
+      },
+      "keyword-shipped": {
+        "by_action": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 30,
+            "share": 1.0
+          }
+        },
+        "by_category": {
+          "adjacent": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          },
+          "near-miss": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          },
+          "unrelated": {
+            "abstain": {
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "n": 0,
+              "share": 0.0
+            },
+            "route": {
+              "n": 10,
+              "share": 1.0
+            }
+          }
+        },
+        "by_level": {},
+        "n": 30
+      }
+    },
+    "source": {
+      "bm25": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 13,
+            "share": 0.565217
+          },
+          "route": {
+            "n": 10,
+            "share": 0.434783
+          }
+        },
+        "confidence": {
+          "abstain_rate": 0.0,
+          "accuracy": 0.652174,
+          "by_action": {
+            "abstain": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "clarify": {
+              "accuracy": 0.615385,
+              "n": 13,
+              "share": 0.565217
+            },
+            "route": {
+              "accuracy": 0.7,
+              "n": 10,
+              "share": 0.434783
+            }
+          },
+          "by_level": {
+            "high": {
+              "accuracy": 0.7,
+              "n": 10,
+              "share": 0.434783
+            },
+            "low": {
+              "accuracy": 0.615385,
+              "n": 13,
+              "share": 0.565217
+            },
+            "medium": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "none": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            }
+          },
+          "coverage": 0.434783,
+          "n": 23,
+          "routed_accuracy": 0.7
+        },
+        "mrr": 0.748551,
+        "ndcg@3": 0.750516,
+        "ndcg@5": 0.78606,
+        "recall@3": 0.826087,
+        "recall@5": 0.913043,
+        "ties": {
+          "tied_top1": 0,
+          "top-1_expected": 0.652174
+        },
+        "top-1": 0.652174
+      },
+      "bm25-card": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 23,
+            "share": 1.0
+          }
+        },
+        "mrr": 0.728986,
+        "ndcg@3": 0.723084,
+        "ndcg@5": 0.723084,
+        "recall@3": 0.73913,
+        "recall@5": 0.73913,
+        "ties": {
+          "tied_top1": 0,
+          "top-1_expected": 0.695652
+        },
+        "top-1": 0.695652
+      },
+      "dense": {
+        "actions": {
+          "abstain": {
+            "n": 1,
+            "share": 0.043478
+          },
+          "clarify": {
+            "n": 1,
+            "share": 0.043478
+          },
+          "route": {
+            "n": 21,
+            "share": 0.913043
+          }
+        },
+        "confidence": {
+          "abstain_rate": 0.043478,
+          "accuracy": 0.826087,
+          "by_action": {
+            "abstain": {
+              "accuracy": 1.0,
+              "n": 1,
+              "share": 0.043478
+            },
+            "clarify": {
+              "accuracy": 0.0,
+              "n": 1,
+              "share": 0.043478
+            },
+            "route": {
+              "accuracy": 0.857143,
+              "n": 21,
+              "share": 0.913043
+            }
+          },
+          "by_level": {
+            "high": {
+              "accuracy": 0.857143,
+              "n": 21,
+              "share": 0.913043
+            },
+            "low": {
+              "accuracy": null,
+              "n": 0,
+              "share": 0.0
+            },
+            "medium": {
+              "accuracy": 0.0,
+              "n": 1,
+              "share": 0.043478
+            },
+            "none": {
+              "accuracy": 1.0,
+              "n": 1,
+              "share": 0.043478
+            }
+          },
+          "coverage": 0.913043,
+          "n": 23,
+          "routed_accuracy": 0.857143
+        },
+        "mrr": 0.905797,
+        "ndcg@3": 0.930121,
+        "ndcg@5": 0.930121,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "ties": {
+          "tied_top1": 0,
+          "top-1_expected": 0.826087
+        },
+        "top-1": 0.826087
+      },
+      "hybrid": {
+        "actions": {
+          "abstain": {
+            "n": 1,
+            "share": 0.043478
+          },
+          "clarify": {
+            "n": 7,
+            "share": 0.304348
+          },
+          "route": {
+            "n": 15,
+            "share": 0.652174
+          }
+        },
+        "confidence": {
+          "abstain_rate": 0.043478,
+          "accuracy": 0.826087,
+          "by_action": {
+            "abstain": {
+              "accuracy": 1.0,
+              "n": 1,
+              "share": 0.043478
+            },
+            "clarify": {
+              "accuracy": 0.571429,
+              "n": 7,
+              "share": 0.304348
+            },
+            "route": {
+              "accuracy": 0.933333,
+              "n": 15,
+              "share": 0.652174
+            }
+          },
+          "by_level": {
+            "high": {
+              "accuracy": 0.933333,
+              "n": 15,
+              "share": 0.652174
+            },
+            "low": {
+              "accuracy": 0.0,
+              "n": 1,
+              "share": 0.043478
+            },
+            "medium": {
+              "accuracy": 0.666667,
+              "n": 6,
+              "share": 0.26087
+            },
+            "none": {
+              "accuracy": 1.0,
+              "n": 1,
+              "share": 0.043478
+            }
+          },
+          "coverage": 0.652174,
+          "n": 23,
+          "routed_accuracy": 0.933333
+        },
+        "mrr": 0.894928,
+        "ndcg@3": 0.90269,
+        "ndcg@5": 0.921415,
+        "recall@3": 0.956522,
+        "recall@5": 1.0,
+        "ties": {
+          "tied_top1": 0,
+          "top-1_expected": 0.826087
+        },
+        "top-1": 0.826087
+      },
+      "keyword": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 23,
+            "share": 1.0
+          }
+        },
+        "mrr": 0.536232,
+        "ndcg@3": 0.566249,
+        "ndcg@5": 0.603699,
+        "recall@3": 0.73913,
+        "recall@5": 0.826087,
+        "ties": {
+          "tied_top1": 3,
+          "top-1_expected": 0.369565
+        },
+        "top-1": 0.347826
+      },
+      "keyword-shipped": {
+        "actions": {
+          "abstain": {
+            "n": 0,
+            "share": 0.0
+          },
+          "clarify": {
+            "n": 0,
+            "share": 0.0
+          },
+          "route": {
+            "n": 23,
+            "share": 1.0
+          }
+        },
+        "mrr": 0.463768,
+        "ndcg@3": 0.518109,
+        "ndcg@5": 0.555559,
+        "recall@3": 0.73913,
+        "recall@5": 0.826087,
+        "ties": {
+          "tied_top1": 3,
+          "top-1_expected": 0.23913
+        },
+        "top-1": 0.217391
+      }
+    }
+  },
+  "schema": 1,
+  "systems": {
+    "bm25": {
+      "confidence": true,
+      "family": "sie",
+      "label": "SIE: BM25 only",
+      "status": "ok"
+    },
+    "bm25-card": {
+      "confidence": false,
+      "family": "sie",
+      "label": "SIE: BM25, Card chunks only",
+      "status": "ok"
+    },
+    "dense": {
+      "confidence": true,
+      "family": "sie",
+      "label": "SIE: dense only",
+      "status": "ok"
+    },
+    "hybrid": {
+      "confidence": true,
+      "family": "sie",
+      "label": "SIE: hybrid RRF (--no-rerank)",
+      "status": "ok"
+    },
+    "hybrid-rerank": {
+      "confidence": true,
+      "family": "sie",
+      "label": "SIE: hybrid + cross-encoder",
+      "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "status": "pending"
+    },
+    "keyword": {
+      "confidence": false,
+      "family": "keyword",
+      "label": "Keyword router (baseline)",
+      "status": "ok"
+    },
+    "keyword-shipped": {
+      "confidence": false,
+      "family": "keyword",
+      "label": "Keyword route() as shipped",
+      "status": "ok"
+    }
+  }
+}

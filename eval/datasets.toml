@@ -1,0 +1,53 @@
+# Evaluation query sets scored by `python -m eval.run_eval` (format: eval/datasets.py).
+# Paths resolve against the working directory: run the harness from the repo root.
+# Gold labels are slugs of the corpus named in `corpus`; with another corpus loaded the set is
+# skipped (the reason is printed). Score any other set with
+#   python -m eval.run_eval --datasets other.toml --out some/dir
+#
+# origin = who wrote the queries:
+#   scaffold         pre-existing hand-written queries from the project scaffold (process unrecorded)
+#   synthetic-llm    written by LLM agents from the skill catalog alone, without running any
+#                    retriever, frozen before scoring (the main set's were also audited)
+#   source-authored  written by the corpus author as behavioral eval cases (independent of SIE, not of the corpus)
+#   human-collected  independently collected real user queries (none yet)
+
+[[dataset]]
+name = "main"
+path = "eval/queries.jsonl"
+kind = "routing"
+corpus = "ml-ai-skills"
+origin_field = "set"
+origin_map = { scaffold = "scaffold", authored = "synthetic-llm" }
+description = "The scaffold's 12 original queries plus 76 written by LLM agents from the skill catalog alone (2 per skill), audited by separate agents and frozen before any system ran"
+label = "Main set"
+title = "Main set — `eval/queries.jsonl`"
+chart_title = "Main set (n={n}, eval/queries.jsonl)"
+
+[[dataset]]
+name = "source"
+path = "eval/queries_source_evals.jsonl"
+kind = "routing"
+corpus = "ml-ai-skills"
+origin = "source-authored"
+description = "The input of every behavioral eval case in the corpus repo's evals/, with that repo's own skill labels, verbatim (python -m eval.build_source_queries)"
+label = "Source-authored set"
+title = "Source-authored set — the ml-ai-skills repo's own `evals/` cases"
+chart_title = "Source-authored set (n={n}, the ml-ai-skills repo's own evals/)"
+
+[[dataset]]
+name = "out-of-scope"
+path = "eval/queries_out_of_scope.jsonl"
+kind = "out_of_scope"
+corpus = "ml-ai-skills"
+origin = "synthetic-llm"
+description = "Requests no skill in the corpus fits (unrelated, adjacent-domain and near-miss), written by an LLM agent from the skill catalog alone; gold is null"
+label = "Out-of-scope set"
+
+[[dataset]]
+name = "multi-intent"
+path = "eval/queries_multi_intent.jsonl"
+kind = "multi_intent"
+corpus = "ml-ai-skills"
+origin = "synthetic-llm"
+description = "Requests with 1-4 intents (single-intent controls included), written by an LLM agent from the skill catalog alone; gold is one list of acceptable skills per intent"
+label = "Multi-intent set"

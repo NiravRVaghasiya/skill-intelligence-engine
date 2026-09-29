@@ -1,0 +1,545 @@
+{
+  "command": "python -m eval.perf --pools 5,10,20,40,80 --repeat 3 --scale 1,4,16 --rerank-k 5,10,20",
+  "embedding": {
+    "mean": 103.452,
+    "n": 333,
+    "p50": 100.667,
+    "p95": 149.528
+  },
+  "embedding_calls": {
+    "before": {
+      "mean": 446.703,
+      "n": 90,
+      "p50": 408.877,
+      "p95": 681.775
+    },
+    "held": {
+      "mean": 64.813,
+      "n": 90,
+      "p50": 59.952,
+      "p95": 107.763
+    },
+    "identical": true,
+    "max_abs_diff": 0.0,
+    "measured": true,
+    "queries": 30,
+    "repeat": 3
+  },
+  "environment": {
+    "cpu_count": 12,
+    "platform": "Windows-11-10.0.26100-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "python": "3.13.2",
+    "versions": {
+      "chromadb": "1.5.9",
+      "numpy": "2.4.4",
+      "onnxruntime": "1.30.0",
+      "rank-bm25": "0.2.2"
+    }
+  },
+  "note": "machine-dependent; not byte-reproducible",
+  "pools": [
+    {
+      "candidates": {
+        "main": {
+          "bm25": 5.0,
+          "dense": 5.0,
+          "fused": 3.636
+        },
+        "source": {
+          "bm25": 5.0,
+          "dense": 5.0,
+          "fused": 3.913
+        }
+      },
+      "deterministic": true,
+      "latency_ms": {
+        "bm25": {
+          "mean": 3.264,
+          "n": 333,
+          "p50": 2.848,
+          "p95": 7.847
+        },
+        "dense": {
+          "mean": 106.108,
+          "n": 333,
+          "p50": 101.399,
+          "p95": 156.276
+        },
+        "explain": {
+          "mean": 1.04,
+          "n": 333,
+          "p50": 0.807,
+          "p95": 1.321
+        },
+        "fuse": {
+          "mean": 0.08,
+          "n": 333,
+          "p50": 0.06,
+          "p95": 0.08
+        },
+        "total": {
+          "mean": 110.513,
+          "n": 333,
+          "p50": 106.207,
+          "p95": 162.104
+        }
+      },
+      "pool": 5,
+      "quality": {
+        "main": {
+          "mrr": 0.969697,
+          "n": 88,
+          "recall@1": 0.943182,
+          "recall@3": 1.0,
+          "recall@5": 1.0
+        },
+        "source": {
+          "mrr": 0.927536,
+          "n": 23,
+          "recall@1": 0.869565,
+          "recall@3": 1.0,
+          "recall@5": 1.0
+        }
+      },
+      "rerank_k": null,
+      "reranked": 0,
+      "samples": 333
+    },
+    {
+      "candidates": {
+        "main": {
+          "bm25": 10.0,
+          "dense": 10.0,
+          "fused": 8.011
+        },
+        "source": {
+          "bm25": 10.0,
+          "dense": 10.0,
+          "fused": 8.261
+        }
+      },
+      "deterministic": true,
+      "latency_ms": {
+        "bm25": {
+          "mean": 3.38,
+          "n": 333,
+          "p50": 2.847,
+          "p95": 9.304
+        },
+        "dense": {
+          "mean": 99.936,
+          "n": 333,
+          "p50": 97.712,
+          "p95": 151.074
+        },
+        "explain": {
+          "mean": 1.531,
+          "n": 333,
+          "p50": 1.197,
+          "p95": 2.809
+        },
+        "fuse": {
+          "mean": 0.147,
+          "n": 333,
+          "p50": 0.084,
+          "p95": 0.112
+        },
+        "total": {
+          "mean": 105.042,
+          "n": 333,
+          "p50": 102.729,
+          "p95": 158.474
+        }
+      },
+      "pool": 10,
+      "quality": {
+        "main": {
+          "mrr": 0.975379,
+          "n": 88,
+          "recall@1": 0.954545,
+          "recall@3": 1.0,
+          "recall@5": 1.0
+        },
+        "source": {
+          "mrr": 0.894928,
+          "n": 23,
+          "recall@1": 0.826087,
+          "recall@3": 0.956522,
+          "recall@5": 1.0
+        }
+      },
+      "rerank_k": null,
+      "reranked": 0,
+      "samples": 333
+    },
+    {
+      "candidates": {
+        "main": {
+          "bm25": 20.0,
+          "dense": 20.0,
+          "fused": 15.955
+        },
+        "source": {
+          "bm25": 20.0,
+          "dense": 20.0,
+          "fused": 16.0
+        }
+      },
+      "deterministic": true,
+      "latency_ms": {
+        "bm25": {
+          "mean": 3.506,
+          "n": 333,
+          "p50": 2.913,
+          "p95": 11.252
+        },
+        "dense": {
+          "mean": 125.97,
+          "n": 333,
+          "p50": 120.481,
+          "p95": 207.006
+        },
+        "explain": {
+          "mean": 2.403,
+          "n": 333,
+          "p50": 1.835,
+          "p95": 6.254
+        },
+        "fuse": {
+          "mean": 0.139,
+          "n": 333,
+          "p50": 0.127,
+          "p95": 0.167
+        },
+        "total": {
+          "mean": 132.054,
+          "n": 333,
+          "p50": 126.845,
+          "p95": 212.406
+        }
+      },
+      "pool": 20,
+      "quality": {
+        "main": {
+          "mrr": 0.97197,
+          "n": 88,
+          "recall@1": 0.954545,
+          "recall@3": 0.988636,
+          "recall@5": 1.0
+        },
+        "source": {
+          "mrr": 0.894928,
+          "n": 23,
+          "recall@1": 0.826087,
+          "recall@3": 0.956522,
+          "recall@5": 1.0
+        }
+      },
+      "rerank_k": null,
+      "reranked": 0,
+      "samples": 333
+    },
+    {
+      "candidates": {
+        "main": {
+          "bm25": 40.0,
+          "dense": 40.0,
+          "fused": 25.875
+        },
+        "source": {
+          "bm25": 40.0,
+          "dense": 40.0,
+          "fused": 26.435
+        }
+      },
+      "deterministic": true,
+      "latency_ms": {
+        "bm25": {
+          "mean": 3.629,
+          "n": 333,
+          "p50": 3.021,
+          "p95": 9.251
+        },
+        "dense": {
+          "mean": 102.675,
+          "n": 333,
+          "p50": 99.106,
+          "p95": 172.673
+        },
+        "explain": {
+          "mean": 3.64,
+          "n": 333,
+          "p50": 2.933,
+          "p95": 9.452
+        },
+        "fuse": {
+          "mean": 0.295,
+          "n": 333,
+          "p50": 0.193,
+          "p95": 0.269
+        },
+        "total": {
+          "mean": 110.262,
+          "n": 333,
+          "p50": 107.823,
+          "p95": 177.07
+        }
+      },
+      "pool": 40,
+      "quality": {
+        "main": {
+          "mrr": 0.970076,
+          "n": 88,
+          "recall@1": 0.954545,
+          "recall@3": 0.988636,
+          "recall@5": 1.0
+        },
+        "source": {
+          "mrr": 0.894928,
+          "n": 23,
+          "recall@1": 0.826087,
+          "recall@3": 0.956522,
+          "recall@5": 1.0
+        }
+      },
+      "rerank_k": null,
+      "reranked": 0,
+      "samples": 333
+    },
+    {
+      "candidates": {
+        "main": {
+          "bm25": 79.5,
+          "dense": 80.0,
+          "fused": 35.227
+        },
+        "source": {
+          "bm25": 80.0,
+          "dense": 80.0,
+          "fused": 35.043
+        }
+      },
+      "deterministic": true,
+      "latency_ms": {
+        "bm25": {
+          "mean": 3.478,
+          "n": 333,
+          "p50": 3.05,
+          "p95": 7.172
+        },
+        "dense": {
+          "mean": 97.157,
+          "n": 333,
+          "p50": 92.774,
+          "p95": 164.467
+        },
+        "explain": {
+          "mean": 5.296,
+          "n": 333,
+          "p50": 4.157,
+          "p95": 12.367
+        },
+        "fuse": {
+          "mean": 0.363,
+          "n": 333,
+          "p50": 0.26,
+          "p95": 0.337
+        },
+        "total": {
+          "mean": 106.317,
+          "n": 333,
+          "p50": 101.288,
+          "p95": 174.583
+        }
+      },
+      "pool": 80,
+      "quality": {
+        "main": {
+          "mrr": 0.970076,
+          "n": 88,
+          "recall@1": 0.954545,
+          "recall@3": 0.988636,
+          "recall@5": 1.0
+        },
+        "source": {
+          "mrr": 0.894928,
+          "n": 23,
+          "recall@1": 0.826087,
+          "recall@3": 0.956522,
+          "recall@5": 1.0
+        }
+      },
+      "rerank_k": null,
+      "reranked": 0,
+      "samples": 333
+    }
+  ],
+  "reranker": {
+    "measured": false,
+    "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "pool": 20,
+    "reason": "cannot load cross-encoder 'cross-encoder/ms-marco-MiniLM-L-6-v2' (no local weights and the Hugging Face hub is unreachable); copy the weights into data/models/ms-marco-MiniLM-L-6-v2/ or set SIE_RERANKER, or run with --no-rerank"
+  },
+  "scale": {
+    "k": 10,
+    "pool": 20,
+    "queries": 50,
+    "rows": [
+      {
+        "chunks": 297,
+        "deterministic": true,
+        "ef_search": 400,
+        "factor": 1,
+        "latency_ms": {
+          "bm25": {
+            "mean": 3.186,
+            "n": 150,
+            "p50": 3.257,
+            "p95": 5.408
+          },
+          "dense": {
+            "mean": 85.962,
+            "n": 150,
+            "p50": 78.383,
+            "p95": 145.018
+          },
+          "explain": {
+            "mean": 2.741,
+            "n": 150,
+            "p50": 2.115,
+            "p95": 8.269
+          },
+          "fuse": {
+            "mean": 0.135,
+            "n": 150,
+            "p50": 0.133,
+            "p95": 0.181
+          },
+          "total": {
+            "mean": 92.048,
+            "n": 150,
+            "p50": 82.585,
+            "p95": 156.794
+          }
+        },
+        "samples": 150,
+        "skills": 38
+      },
+      {
+        "chunks": 1188,
+        "deterministic": true,
+        "ef_search": 400,
+        "factor": 4,
+        "latency_ms": {
+          "bm25": {
+            "mean": 14.148,
+            "n": 150,
+            "p50": 13.668,
+            "p95": 26.532
+          },
+          "dense": {
+            "mean": 100.42,
+            "n": 150,
+            "p50": 94.995,
+            "p95": 155.608
+          },
+          "explain": {
+            "mean": 2.147,
+            "n": 150,
+            "p50": 1.566,
+            "p95": 7.387
+          },
+          "fuse": {
+            "mean": 0.316,
+            "n": 150,
+            "p50": 0.121,
+            "p95": 0.188
+          },
+          "total": {
+            "mean": 117.057,
+            "n": 150,
+            "p50": 114.666,
+            "p95": 170.427
+          }
+        },
+        "samples": 150,
+        "skills": 152
+      },
+      {
+        "chunks": 4752,
+        "deterministic": true,
+        "ef_search": 400,
+        "factor": 16,
+        "latency_ms": {
+          "bm25": {
+            "mean": 67.065,
+            "n": 150,
+            "p50": 69.433,
+            "p95": 117.476
+          },
+          "dense": {
+            "mean": 94.187,
+            "n": 150,
+            "p50": 86.82,
+            "p95": 164.723
+          },
+          "explain": {
+            "mean": 2.7,
+            "n": 150,
+            "p50": 2.111,
+            "p95": 8.605
+          },
+          "fuse": {
+            "mean": 0.192,
+            "n": 150,
+            "p50": 0.155,
+            "p95": 0.225
+          },
+          "total": {
+            "mean": 164.177,
+            "n": 150,
+            "p50": 160.881,
+            "p95": 261.904
+          }
+        },
+        "samples": 150,
+        "skills": 608
+      }
+    ],
+    "temp_dir_removed": true
+  },
+  "setup": {
+    "corpus": {
+      "chunk_fingerprint": "f4b5d55da6d7c783",
+      "content_fingerprint": "7d62d861fc8ce6a7",
+      "n_chunks": 297,
+      "n_skills": 38,
+      "name": "ml-ai-skills",
+      "version": "8328c60"
+    },
+    "default_pool": 20,
+    "dense": {
+      "count": 297,
+      "embedder": "onnx",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "persist_dir": "data/chroma"
+    },
+    "k": 10,
+    "queries": {
+      "main": {
+        "n": 88,
+        "path": "eval/queries.jsonl",
+        "sha256": "25bfe6665e7e"
+      },
+      "source": {
+        "n": 23,
+        "path": "eval/queries_source_evals.jsonl",
+        "sha256": "282591082f8e"
+      }
+    },
+    "repeat": 3,
+    "rrf_k": 60
+  },
+  "stamp": "2026-09-28"
+}
